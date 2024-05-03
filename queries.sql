@@ -53,7 +53,8 @@ CREATE TABLE Movie (
     title varchar(255) NOT NULL,
     poster_url varchar(255) NOT NULL,
     rating int NOT NULL,
-    release_date TIMESTAMP NOT NULL
+    release_date TIMESTAMP NOT NULL,
+    description VARCHAR(255)
 );
 
 CREATE TABLE Movie_Genre (
@@ -90,3 +91,15 @@ CREATE TABLE Person_Profession (
 select column_name, data_type, character_maximum_length, column_default, is_nullable
 from INFORMATION_SCHEMA.COLUMNS where table_name = 'movie';
 
+ALTER TABLE movie
+ADD description VARCHAR(255);
+
+
+UPDATE movie
+      SET
+        title = 'Madame Web',
+        poster_url = 'https://www.gamespot.com/a/uploads/scale_medium/1757/17577455/4239053-madameweb.jpg',
+        rating = 4
+        release_date = '2024-05-01T00:00:00.000Z'
+        description = 'Cassandra Webb is a New York metropolis paramedic who begins to demonstrate signs of clairvoyance. Forced to challenge revelations about her past, she needs to safeguard three young women from a deadly adversary who wants them destroyed.'
+      WHERE id = 'e51e638a-c437-426f-a97a-53eaa469a1c2'

@@ -19,8 +19,7 @@ export default async function Page({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const initialMovies = await fetchMovies(query);
-  const movies = [...initialMovies];
+  const movies = await fetchMovies(query);
 
   return (
     <div className="w-full">
@@ -47,11 +46,11 @@ export default async function Page({
                 <div key={movie.id} className="group relative">
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                     <Link
-                      href={`/dashboard/movies/${movie.id}/read`}
+                      href={`/dashboard/movies/${movie.id}`}
                       className="rounded-md border p-2 hover:bg-gray-100"
                     >
                       <img
-                        src={movie.poster_image_url}
+                        src={movie.poster_url}
                         alt={movie.title}
                         className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                       />
@@ -60,7 +59,7 @@ export default async function Page({
                   <div className="mt-4 flex justify-between">
                     <div>
                       <h3 className="text-sm text-gray-700">
-                        <a href={`/movies/${movie.id}/read`}>
+                        <a href={`/movies/${movie.id}`}>
                           <span
                             aria-hidden="true"
                             className="absolute inset-0"
@@ -69,7 +68,8 @@ export default async function Page({
                         </a>
                       </h3>
                       <p className="mt-1 text-sm text-gray-500">
-                        {movie.release_date.getUTCFullYear()} - {movie.genre}
+                        {movie.release_date.getUTCFullYear()} -{" "}
+                        {movie.genres.join(", ")}
                       </p>
                     </div>
                     <p className="text-sm font-medium text-gray-900">

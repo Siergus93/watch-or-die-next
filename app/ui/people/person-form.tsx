@@ -3,9 +3,12 @@
 import { useFormState } from "react-dom";
 import Link from "next/link";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { PersonFields as f, EditPersonType } from "@/app/lib/model";
+import {
+  PersonFields as f,
+  EditPersonType,
+} from "@/app/lib/person/person.types";
 import { Button } from "@/app/ui/button";
-import { createPerson, editPerson } from "@/app/lib/actions";
+import { createPerson, editPerson } from "@/app/lib/person/person.actions";
 
 export function PersonForm({
   id,

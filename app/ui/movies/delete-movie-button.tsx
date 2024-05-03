@@ -1,12 +1,12 @@
 "use client";
-import { deletePerson } from "@/app/lib/person/person.actions";
+import { deleteMovie } from "@/app/lib/movie/movie.actions";
 import { useFormState } from "react-dom";
 import { Button } from "@/app/ui/button";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-type DeletePersonButtonType = { id: string };
-export const DeletePersonButton = ({ id }: DeletePersonButtonType) => {
-  const [_, dispatch] = useFormState(deletePerson, {
+type DeleteMovieButtonType = { id: string };
+export const DeleteMovieButton = ({ id }: DeleteMovieButtonType) => {
+  const [_, dispatch] = useFormState(deleteMovie, {
     id,
   });
 

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { fetchPeople } from "@/app/lib/data";
-import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import Search from "@/app/ui/search";
 import Link from "next/link";
 

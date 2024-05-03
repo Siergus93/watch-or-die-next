@@ -20,10 +20,21 @@ import { unstable_noStore as noStore } from "next/cache";
 //   genres: ["action", "fantasy"],
 // };
 
+export type MovieRaw = {
+  id: string;
+  title: string;
+  poster_url: string;
+  release_date: Date;
+  genres: string;
+  rating: number;
+  description: string;
+  roles: { role: string; name: string }[];
+};
+
 export type Movie2 = {
   id: string;
   title: string;
-  poster_image_url: string;
+  poster_url: string;
   release_date: Date;
   genres: Genre[];
   rating: number;
@@ -35,6 +46,7 @@ export type Movie2 = {
 //- id
 //- title
 //- poster
+//- rating
 //- release date
 //- genres -> movie-genres
 
@@ -100,19 +112,26 @@ export enum Role {
   scriptwriter = "scriptwriter",
 }
 
-export async function fetchMovies(query: string): Promise<Movie[]> {
+export async function fetchMovies(query: string): Promise<Movie2[]> {
   // Add noStore() here prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
   noStore();
   try {
-    const data = await sql<Movie>`SELECT *
-      FROM movies
-      WHERE 
-        title ILIKE ${`%${query}%`} OR
-        genre ILIKE ${`%${query}%`}
-      `;
+    const data = await sql<MovieRaw>`
+    SELECT m.*, (SELECT STRING_AGG (genre,',') genres FROM movie_genre mg where mg.movie_id = m.id)
+    FROM movie m
+    WHERE 
+      title ILIKE ${`%${query}%`}
+    `;
 
-    return data.rows;
+    const rows = data.rows.map((r) => {
+      return {
+        ...r,
+        genres: r.genres.split(",") as Genre[],
+      } as Movie2;
+    });
+
+    return rows;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch revenue data.");
@@ -122,8 +141,9 @@ export async function fetchMovies(query: string): Promise<Movie[]> {
 export async function fetchMovie(id: string) {
   noStore();
   try {
-    const data = await sql<Movie>`SELECT *
-      FROM movies
+    const data = await sql<Movie2>`
+      SELECT m.*, (SELECT STRING_AGG (genre,',') genres FROM movie_genre mg where mg.movie_id = m.id)
+      FROM movie m
       WHERE 
         id = ${id}
       `;

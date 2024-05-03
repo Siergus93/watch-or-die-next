@@ -1,53 +1,35 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import { fetchMovie } from "@/app/lib/data";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { DeleteMovieButton } from "@/app/ui/movies/delete-movie-button";
 
 export const metadata: Metadata = {
   title: "Movie page",
 };
 
-//cast
-//person = {name, role}
-
 export default async function Page({ params }: { params: { id: string } }) {
-  //const movie = await fetchMovie(params.id);
-  const movie = {
-    poster_image_url:
-      "https://www.impericon.com/media/catalog/product/f/p/fp2658-lotr-fellowship-of-the-ring_lg.jpg",
-    title: "Lord of the Rings The Fellowship of the Ring",
-    description:
-      "An ancient Ring thought lost for centuries has been found, and through a strange twist of fate has been given to a small Hobbit named Frodo.",
-    release_date: new Date(2001, 11, 10),
-    rating: 8.9,
-    cast: [
-      { role: "Director", name: "Peter Jackson" },
-      { role: "Screenwriter", name: "Fran Walsh" },
-      { role: "Frodo Baggins", name: "Elijah Wood I" },
-      { role: 'Samwise "Sam" Gamgee', name: "Sean Astin" },
-      { role: "Aragorn", name: "Viggo Mortensen" },
-      { role: "Gandalf", name: "Ian McKellen" },
-    ],
-    genres: ["action", "fantasy"],
-  };
+  const movie = await fetchMovie(params.id);
 
   return (
     <main className="flex flex-col items-center justify-between">
       <a href="#" className="group block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={movie.poster_image_url}
-          alt={movie.title}
+          src={movie?.poster_url}
+          alt={movie?.title}
           className="h-[400px] w-full object-cover sm:h-[450px]"
         />
 
         <div className="mt-1.5">
           <p className="text-xs text-gray-500">
-            {movie.release_date.toDateString()}
+            {movie?.release_date.toDateString()}
           </p>
 
           <div className=" flex justify-between text-sm">
             <h3 className="text-gray-900 group-hover:underline group-hover:underline-offset-4">
-              {movie.title}
+              {movie?.title}
             </h3>
           </div>
         </div>
@@ -55,13 +37,13 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <div className="pl-5">
         <div className="">
-          <RatingStars rating={movie.rating} />
+          <RatingStars rating={movie?.rating ?? 0} />
         </div>
 
         <p className="">Cast</p>
 
-        <div className="flow-root px-10 pt-2">
-          {movie.cast.map((c, i) => {
+        {/* <div className="flow-root px-10 pt-2">
+          {movie?.roles.map((c, i) => {
             return (
               <dl key={i} className="-my-3 divide-y divide-gray-100 text-sm">
                 <div className="grid grid-cols-1 gap-1 py-3 even:bg-gray-50 sm:grid-cols-3 sm:gap-4">
@@ -71,8 +53,17 @@ export default async function Page({ params }: { params: { id: string } }) {
               </dl>
             );
           })}
-        </div>
+        </div> */}
       </div>
+
+      <Link
+        href={`/movies/${params.id}/edit`}
+        className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      >
+        <span className="hidden md:block">Edit</span>{" "}
+        <PencilSquareIcon className="h-5 md:ml-4" />
+      </Link>
+      <DeleteMovieButton id={params.id} />
     </main>
   );
 }
